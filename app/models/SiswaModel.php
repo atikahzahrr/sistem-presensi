@@ -78,10 +78,22 @@ class SiswaModel
 
     // Hapus siswa
     public function delete($id)
-    {
-        $query = "DELETE FROM " . $this->table_name . " WHERE id_siswa = ?";
+{
+    try {
+        $query = "DELETE FROM siswa WHERE id_siswa = ?";
         $stmt = $this->conn->prepare($query);
+
         return $stmt->execute([$id]);
+
+    } catch (PDOException $e) {
+
+        // Jika siswa masih memiliki data absensi
+        if ($e->getCode() == '23000') {
+            return false;
+        }
+
+        return false;
     }
+}
 }
 ?>
